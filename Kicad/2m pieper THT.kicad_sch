@@ -4,6 +4,12 @@
 	(generator_version "9.0")
 	(uuid "9cc8d54d-7e05-4236-b1ce-ca8dd1e0e00c")
 	(paper "A4")
+	(title_block
+		(title "iPieper")
+		(date "2025-04-22")
+		(rev "1")
+		(company "PE5PVB")
+	)
 	(lib_symbols
 		(symbol "Connector:TestPoint"
 			(pin_numbers
@@ -8608,13 +8614,14 @@
 				(justify right)
 			)
 		)
-		(property "Value" "~"
+		(property "Value" "1x3 header"
 			(at 99.06 104.14 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(justify right)
+				(hide yes)
 			)
 		)
 		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical"

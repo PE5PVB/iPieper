@@ -7,6 +7,12 @@
 		(legacy_teardrops no)
 	)
 	(paper "A4")
+	(title_block
+		(title "iPieper")
+		(date "2025-04-22")
+		(rev "1")
+		(company "PE5PVB")
+	)
 	(layers
 		(0 "F.Cu" signal)
 		(2 "B.Cu" signal)
@@ -21302,7 +21308,7 @@
 				)
 			)
 		)
-		(property "Value" "~"
+		(property "Value" "1x3 header"
 			(at 0 7.41 0)
 			(layer "F.Fab")
 			(uuid "6279b5d3-6d25-41a5-bc80-9ee67dc59150")
