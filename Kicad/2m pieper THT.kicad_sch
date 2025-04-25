@@ -4687,7 +4687,7 @@
 			(embedded_fonts no)
 		)
 	)
-	(text "L5 + L7: 3 windingen, 9mm diameter, 9mm lengte\nL6: 4 windingen, 9mm diameter, 9mm lengte"
+	(text "L5 + L7: 3 windingen, 7mm diameter, 9mm lengte\nL6: 4 windingen, 7mm diameter, 9mm lengte"
 		(exclude_from_sim no)
 		(at 140.97 39.37 0)
 		(effects
