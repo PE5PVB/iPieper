@@ -8070,7 +8070,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "47"
+		(property "Value" "82"
 			(at 128.905 65.405 0)
 			(effects
 				(font
@@ -12723,7 +12723,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "82"
+		(property "Value" "47"
 			(at 128.905 38.735 0)
 			(effects
 				(font
@@ -16175,10 +16175,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "eb5e259d-680a-43f5-bc1d-928f21fbd721")
 		(property "Reference" "R9"
-			(at 96.52 62.865 0)
+			(at 95.885 62.865 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16186,8 +16185,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "47"
-			(at 96.52 65.405 0)
+		(property "Value" "10"
+			(at 95.885 65.405 0)
 			(effects
 				(font
 					(size 1.27 1.27)

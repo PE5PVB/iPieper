@@ -1,3 +1,13 @@
+/*
+  iPieper software v1.0
+  Getest met esp32 boardmanager v2.0.17
+
+  Voor optimale prestaties gebruik deze instellingen bij compileren:
+
+  CPU Frequency                80MHz (WiFi/BT)
+  Flash frequency              40MHz
+*/
+
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
 #include <SPI.h>
@@ -55,6 +65,7 @@ FileLibrary file[50];
 
 void setup() {
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
+  Serial.begin(115200);
   Serial2.begin(9600);
 
   pinMode(RF_TX, OUTPUT);
@@ -76,8 +87,8 @@ void setup() {
 
   for (byte x = 0; x < 10; x++) piepername[x] = EEPROM.read(EE_BYTE_PIEPERNAME + x);
 
-  SerialBT.println();
-  SerialBT.println(String(piepername) + " opstarten..........");
+  Serial.println();
+  Serial.println(String(piepername) + " opstarten..........");
 
   SPI.begin();
   mp3.reset();
@@ -94,6 +105,7 @@ void setup() {
   mp3.sleep();
   txonoffMillis = millis();
   digitalWrite(pin_LED, LOW);
+  Serial.println("Opstarten voltooid!");
 }
 
 void loop() {
@@ -102,6 +114,7 @@ void loop() {
       config = true;
       testmode = false;
       doTXEnable(0);
+      Serial.println("Configuratie gestart");
       SerialBT.begin(piepername);
       digitalWrite(pin_LED, HIGH);
       while (digitalRead(pin_Button) == LOW);
@@ -115,6 +128,7 @@ void loop() {
 
   if ((float)millis() / (60.0 * 1000.0) >= panictime) {
     if (config) SerialBT.println("Panic mode aktief!");
+    Serial.println("Panic mode aktief!");
     frequency = 145000;
     mp3.sleep();
     doTXEnable(1);
@@ -150,10 +164,12 @@ void doRandomFreq() {
   randomFrequency = round(randomFrequency / 25.0) * 25;
   if (config) SerialBT.println("Willekeurige frequentie: " + String(randomFrequency / 1000) + "." + (randomFrequency % 1000 < 10 ? "0" : "") + (randomFrequency % 1000 < 100 ? "0" : "") + String(randomFrequency % 1000) + "MHz");
   setFreq(randomFrequency);
+  Serial.println("Randon frequentie ingesteld op: " + String(randomFrequency / 1000) + "." + (randomFrequency % 1000 < 10 ? "0" : "") + (randomFrequency % 1000 < 100 ? "0" : "") + String(randomFrequency % 1000) + "MHz");
 }
 
 void doTXEnable(bool status) {
   if (status) {
+    Serial.println("Zender ingeschakeld");
     digitalWrite(pin_LE, LOW);
     SPI.transfer(0x90);
     SPI.transfer(0x80);
@@ -168,6 +184,7 @@ void doTXEnable(bool status) {
     if (terrormode) doRandomFreq(); else setFreq(frequency);
     digitalWrite(RF_TX, LOW);
   } else {
+    Serial.println("Zender uitgeschakeld");
     digitalWrite(RF_TX, HIGH);
     mp3.stop();
     mp3.sleep();
@@ -181,6 +198,7 @@ void setFreq(unsigned int frequency_kHz) {
   SPI.transfer(frequency_kHz & 0xFF);
   SPI.transfer(0x01);
   digitalWrite(pin_LE, HIGH);
+  Serial.println("PLL ingesteld op: " + String(frequency_kHz) + " kHz");
 }
 
 void playMP3(unsigned int track) {
@@ -195,6 +213,7 @@ void playMP3(unsigned int track) {
   }
 
   mp3.playFileByIndexNumber(track);
+  Serial.println("Afspelen track " + String(track)  + " gestart.");
   mp3.play();
   previousTrack = track;
 }

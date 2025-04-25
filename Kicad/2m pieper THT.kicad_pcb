@@ -1420,7 +1420,7 @@
 				)
 			)
 		)
-		(property "Value" "47"
+		(property "Value" "82"
 			(at 5.08 2.37 0)
 			(layer "F.Fab")
 			(uuid "2d0b0304-3411-4072-86bc-4f221e70a33e")
@@ -5316,7 +5316,7 @@
 				)
 			)
 		)
-		(property "Value" "82"
+		(property "Value" "47"
 			(at 5.08 2.37 90)
 			(layer "F.Fab")
 			(uuid "90de3a55-c789-4c16-aeda-6e82085ec96c")
@@ -10243,7 +10243,7 @@
 				)
 			)
 		)
-		(property "Value" "47"
+		(property "Value" "10"
 			(at 5.08 2.37 0)
 			(layer "F.Fab")
 			(uuid "2b6233d4-ece2-49bb-973c-aa1ec3d0cf73")
@@ -22598,6 +22598,18 @@
 			(justify left bottom)
 		)
 	)
+	(gr_text "G"
+		(at 182.8292 91.0082 0)
+		(layer "F.SilkS")
+		(uuid "983a4c0c-f82c-4d42-b52f-bfe9ed3697e3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+			(justify left bottom)
+		)
+	)
 	(gr_text "Radiokampweek 2025"
 		(at 201.9808 115.57 0)
 		(layer "F.SilkS")
@@ -22623,7 +22635,7 @@
 			(justify left bottom)
 		)
 	)
-	(gr_text "L"
+	(gr_text "k"
 		(at 165.735 102.6668 0)
 		(layer "F.SilkS")
 		(uuid "bb9cea44-acee-409b-9f87-1f80837a6a1d")
