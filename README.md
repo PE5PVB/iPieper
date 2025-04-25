@@ -11,3 +11,5 @@ hardware is geheel opensource dus naar gelieve aan te passen.
 
 Programmeren gaat via het Bluetooth serial protocol. Wanneer de iPieper met bijvoorbeeld een Windows laptop via
 bluetooth is verbonden zal er een virtuele COM-poort beschikbaar komen om deze te programmeren.
+
+![](Kicad/photo.jpg)
