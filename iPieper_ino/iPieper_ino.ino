@@ -198,7 +198,7 @@ void setFreq(unsigned int frequency_kHz) {
   SPI.transfer(frequency_kHz & 0xFF);
   SPI.transfer(0x01);
   digitalWrite(pin_LE, HIGH);
-  Serial.println("PLL ingesteld op: " + String(frequency_kHz) + " kHz");
+  Serial.println("PLL ingesteld op: " + String(frequency_kHz *25) + " kHz");
 }
 
 void playMP3(unsigned int track) {
@@ -234,18 +234,18 @@ void handleMenu() {
             SerialBT.println("Pieper menu");
             SerialBT.println("-----------");
             SerialBT.println();
-            SerialBT.println("?\t\tToon menu.");
+            SerialBT.println("?\t\t\tToon menu.");
             SerialBT.println("F<freq in kHz>\tStel de frequentie in kHz in.");
             SerialBT.println("A<sec>\t\tTijd in sec., dat de zender uit de lucht is.");
             SerialBT.println("B<sec>\t\tTijd in sec., dat de zender in de lucht is. 0 voor MP3 lengte.");
             SerialBT.println("P<min>\t\tPaniektijd in min. (Hierna Permanente TX op 145.0MHz met toon.");
             SerialBT.println("N<naam>\t\tPiepernaam (max 10 characters).");
-            SerialBT.println("T\t\tTestmode met huidige configuratie.");
-            SerialBT.println("R\t\tActiveer terror mode, elke TX een andere frequentie xD.");
-            SerialBT.println("M<track>\tAf te spelen MP3 track. (0 voor willekeurig).");
-            SerialBT.println("L\t\tLijst met beschikbare MP3 bestanden.");
-            SerialBT.println("O\t\tOverzicht van huidige configuratie.");
-            SerialBT.println("S\t\tHerstart de pieper.");
+            SerialBT.println("T\t\t\tTestmode met huidige configuratie.");
+            SerialBT.println("R\t\t\tActiveer terror mode, elke TX een andere frequentie xD.");
+            SerialBT.println("M<track>\t\tAf te spelen MP3 track. (0 voor willekeurig).");
+            SerialBT.println("L\t\t\tLijst met beschikbare MP3 bestanden.");
+            SerialBT.println("O\t\t\tOverzicht van huidige configuratie.");
+            SerialBT.println("S\t\t\tHerstart de pieper.");
             SerialBT.println();
             break;
 
@@ -308,7 +308,7 @@ void handleMenu() {
             SerialBT.println("Track:\tNaam:\t\tLengte: (sec)");
             for (int x = 1; x < numberoffiles + 1; x++) {
               SerialBT.print(file[x].index);
-              SerialBT.print("\t");
+              SerialBT.print("\t\t");
               SerialBT.print(file[x].name);
               SerialBT.print("\t");
               SerialBT.println(file[x].length);
@@ -402,7 +402,7 @@ void handleMenu() {
             } else {
               SerialBT.println(String(frequency / 1000) + "." + (frequency % 1000 < 10 ? "0" : "") + (frequency % 1000 < 100 ? "0" : "") + String(frequency % 1000) + "MHz");
             }
-            SerialBT.print("MP3 track\t");
+            SerialBT.print("MP3 track\t\t");
             if (mp3track == 0) {
               SerialBT.println("Willekeurig");
             } else {
@@ -410,7 +410,7 @@ void handleMenu() {
             }
             SerialBT.println("TX AAN periode:\t" + String(txon) + " seconden.");
             SerialBT.println("TX UIT periode:\t" + String(txoff) + " seconden.");
-            SerialBT.println("Panic mode:\tNa " + String(panictime) + " minuten.");
+            SerialBT.println("Panic mode:\t\tNa " + String(panictime) + " minuten.");
             SerialBT.println();
             break;
 
