@@ -8070,7 +8070,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "82"
+		(property "Value" "47"
 			(at 128.905 65.405 0)
 			(effects
 				(font
@@ -8262,10 +8262,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "12a59a17-c093-46bb-a0fe-1b92b160bd24")
 		(property "Reference" "C19"
-			(at 136.525 62.8713 0)
+			(at 137.16 62.865 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8273,8 +8272,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "47n"
-			(at 136.525 65.4113 0)
+		(property "Value" "10n"
+			(at 137.16 65.405 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8894,7 +8893,7 @@
 				)
 			)
 		)
-		(property "Value" "22p"
+		(property "Value" "27p"
 			(at 138.4363 45.72 90)
 			(effects
 				(font
@@ -11584,7 +11583,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100p"
+		(property "Value" "27p"
 			(at 106.68 57.15 0)
 			(effects
 				(font
@@ -12214,7 +12213,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "6n8"
+		(property "Value" "1uF"
 			(at 15.875 112.395 0)
 			(effects
 				(font
@@ -14364,7 +14363,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "2k"
+		(property "Value" "10k"
 			(at 15.875 92.71 0)
 			(effects
 				(font
@@ -14964,18 +14963,17 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "c3f58479-3bcf-4e92-917f-1f5141627b59")
 		(property "Reference" "C16"
-			(at 105.4163 43.18 90)
+			(at 105.41 43.18 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "47n"
-			(at 105.4163 45.72 90)
+		(property "Value" "27p"
+			(at 105.41 45.72 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15379,7 +15377,7 @@
 				)
 			)
 		)
-		(property "Value" "1n"
+		(property "Value" "27p"
 			(at 54.6163 45.085 90)
 			(effects
 				(font
@@ -15639,10 +15637,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "d56a7911-4680-4e82-9a49-82c8fd8c2305")
 		(property "Reference" "C15"
-			(at 103.505 62.8713 0)
+			(at 104.14 62.865 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15650,8 +15647,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "47n"
-			(at 103.505 65.4113 0)
+		(property "Value" "10n"
+			(at 104.14 65.405 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16185,7 +16182,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10"
+		(property "Value" "22"
 			(at 95.885 65.405 0)
 			(effects
 				(font
