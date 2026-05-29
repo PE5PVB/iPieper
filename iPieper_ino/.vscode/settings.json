@@ -1,0 +1,7 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "editor.tabSize": 2,
+    "files.associations": {
+        "*.ino": "cpp"
+    }
+}

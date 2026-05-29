@@ -1,10 +1,19 @@
 /*
   iPieper software v1.0
-  Getest met esp32 boardmanager v2.0.17
 
-  Voor optimale prestaties gebruik deze instellingen bij compileren:
+  Te bouwen met:
+    - Arduino IDE : open iPieper_ino.ino
+    - VS Code     : open de map iPieper_ino (PlatformIO, zie platformio.ini)
 
-  CPU Frequency                80MHz (WiFi/BT)
+  Compileert op zowel arduino-esp32 core 2.x als 3.x: de ledc-API in panic
+  mode switcht automatisch via #if ESP_ARDUINO_VERSION_MAJOR >= 3.
+
+  Instellingen voor een zo laag mogelijk stroomverbruik. In de Arduino IDE
+  stel je deze in via het Tools-menu; bij PlatformIO staan ze al in
+  platformio.ini. Bovendien zet setup() de klok zelf op 80 MHz, zodat de
+  lage kloksnelheid in beide omgevingen gegarandeerd is:
+
+  CPU Frequency                80MHz (laagste klok waarbij Bluetooth blijft werken)
   Flash frequency              40MHz
 */
 
@@ -63,7 +72,15 @@ FileLibrary file[50];
 #define EE_CHECK                    12
 #define EE_BYTE_PIEPERNAME          13    // 10 positions
 
+void dbg(const String& s) {
+  Serial.print('[');
+  Serial.print(millis());
+  Serial.print("] ");
+  Serial.println(s);
+}
+
 void setup() {
+  setCpuFrequencyMhz(80);                 // Laagste klok waarbij Bluetooth blijft werken (stroombesparing)
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
   Serial.begin(115200);
   Serial2.begin(9600);
@@ -94,6 +111,7 @@ void setup() {
   mp3.reset();
   mp3.setVolume(30);
   numberoffiles = mp3.countFiles();
+  if (numberoffiles > 49) numberoffiles = 49;   // file[] heeft 50 plekken; we gebruiken 1..49
 
   for (int x = 1; x < numberoffiles + 1; x++) {
     mp3.playFileByIndexNumber(x);
@@ -105,7 +123,7 @@ void setup() {
   mp3.sleep();
   txonoffMillis = millis();
   digitalWrite(pin_LED, LOW);
-  Serial.println("Opstarten voltooid!");
+  dbg("Opstarten voltooid (txon=" + String(txon) + " txoff=" + String(txoff) + " freq=" + String(frequency) + ")");
 }
 
 void loop() {
@@ -114,7 +132,7 @@ void loop() {
       config = true;
       testmode = false;
       doTXEnable(0);
-      Serial.println("Configuratie gestart");
+      dbg("Configuratie gestart");
       SerialBT.begin(piepername);
       digitalWrite(pin_LED, HIGH);
       while (digitalRead(pin_Button) == LOW);
@@ -122,26 +140,51 @@ void loop() {
   } else if (!bootEnd) {
     bootEnd = true;
     digitalWrite(pin_LED, HIGH);
+    dbg("Boot venster afgelopen");
   }
 
   if (config && !testmode && mp3.getStatus() == MP3_STATUS_PLAYING) doTXEnable(0);
 
-  if ((float)millis() / (60.0 * 1000.0) >= panictime) {
+  if (millis() >= (unsigned long)panictime * 60UL * 1000UL) {
     if (config) SerialBT.println("Panic mode aktief!");
-    Serial.println("Panic mode aktief!");
+    dbg("Panic mode aktief!");
     frequency = 145000;
     mp3.sleep();
     doTXEnable(1);
     pinMode(pin_Audio, OUTPUT);
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+    // arduino-esp32 3.x: pin-based ledc API
+    ledcAttach(pin_Audio, 1000, 8);
+    ledcWriteTone(pin_Audio, 1000);
+    ledcWrite(pin_Audio, 50);
+#else
+    // arduino-esp32 2.x: channel-based ledc API
     ledcAttachPin(pin_Audio, 0);
     ledcWriteTone(0, 1000);
     ledcWrite(0, 50);
+#endif
     while (true) blinkLED(500);
   }
 
-  if (millis() >= txonoffMillis + (txonoffstate ? (txon == 0 ? mp3.currentFileLengthInSeconds() : txon) : txoff) * 1000) {
+  unsigned int  mp3LenSec = (txon == 0) ? mp3.currentFileLengthInSeconds() : 0;
+  // Fallback naar gecachte lengte uit de setup-enumeratie als de live query
+  // 0 teruggeeft (transient direct na playMP3, of bij cold boot voordat de
+  // mp3 modul ook maar gestart is). Zonder deze guard zou de toggle direct
+  // naar OFF schieten en zou de pieper na een koude start eerst txoff sec
+  // stil zijn voordat er voor het eerst gezonden wordt.
+  if (mp3LenSec == 0 && txon == 0 && numberoffiles >= 1) {
+    byte t = previousTrack;
+    if (t < 1 || t > numberoffiles || t >= 50) {
+      t = (mp3track >= 1 && mp3track <= numberoffiles) ? mp3track : (byte)1;
+    }
+    mp3LenSec = file[t].length;
+  }
+  unsigned long needed    = (txonoffstate ? (txon == 0 ? mp3LenSec : txon) : txoff) * 1000UL;
+  if (millis() >= txonoffMillis + needed) {
+    unsigned long phaseMs = millis() - txonoffMillis;
     txonoffMillis = millis();
     txonoffstate = !txonoffstate;
+    dbg(String("Toggle -> ") + (txonoffstate ? "ON" : "OFF") + " (vorige fase " + String(phaseMs) + " ms, mp3len=" + String(mp3LenSec) + "s, txon=" + String(txon) + " txoff=" + String(txoff) + ")");
     if (!txonoffstate && txoff != 0 && (!config || testmode)) {
       doTXEnable(0);
       if (config) SerialBT.println("TX UIT");
@@ -149,7 +192,9 @@ void loop() {
   }
 
   if (txonoffstate && (!config || testmode)) {
-    if (mp3.getStatus() != MP3_STATUS_PLAYING) {
+    byte mp3st = mp3.getStatus();
+    if (mp3st != MP3_STATUS_PLAYING) {
+      dbg("MP3 niet aan het spelen (status=" + String(mp3st) + "), start TX + playMP3");
       if (config) SerialBT.println("TX AAN");
       doTXEnable(1);
       playMP3(mp3track);
@@ -164,12 +209,12 @@ void doRandomFreq() {
   randomFrequency = round(randomFrequency / 25.0) * 25;
   if (config) SerialBT.println("Willekeurige frequentie: " + String(randomFrequency / 1000) + "." + (randomFrequency % 1000 < 10 ? "0" : "") + (randomFrequency % 1000 < 100 ? "0" : "") + String(randomFrequency % 1000) + "MHz");
   setFreq(randomFrequency);
-  Serial.println("Randon frequentie ingesteld op: " + String(randomFrequency / 1000) + "." + (randomFrequency % 1000 < 10 ? "0" : "") + (randomFrequency % 1000 < 100 ? "0" : "") + String(randomFrequency % 1000) + "MHz");
+  dbg("Random freq: " + String(randomFrequency) + " kHz");
 }
 
 void doTXEnable(bool status) {
   if (status) {
-    Serial.println("Zender ingeschakeld");
+    dbg("Zender INGESCHAKELD");
     digitalWrite(pin_LE, LOW);
     SPI.transfer(0x90);
     SPI.transfer(0x80);
@@ -184,7 +229,7 @@ void doTXEnable(bool status) {
     if (terrormode) doRandomFreq(); else setFreq(frequency);
     digitalWrite(RF_TX, LOW);
   } else {
-    Serial.println("Zender uitgeschakeld");
+    dbg("Zender UITGESCHAKELD");
     digitalWrite(RF_TX, HIGH);
     mp3.stop();
     mp3.sleep();
@@ -198,7 +243,7 @@ void setFreq(unsigned int frequency_kHz) {
   SPI.transfer(frequency_kHz & 0xFF);
   SPI.transfer(0x01);
   digitalWrite(pin_LE, HIGH);
-  Serial.println("PLL ingesteld op: " + String(frequency_kHz *25) + " kHz");
+  dbg("PLL ingesteld op " + String(frequency_kHz * 25) + " kHz");
 }
 
 void playMP3(unsigned int track) {
@@ -213,7 +258,7 @@ void playMP3(unsigned int track) {
   }
 
   mp3.playFileByIndexNumber(track);
-  Serial.println("Afspelen track " + String(track)  + " gestart.");
+  dbg("MP3 track " + String(track) + " gestart");
   mp3.play();
   previousTrack = track;
 }

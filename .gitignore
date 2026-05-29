@@ -1,0 +1,25 @@
+# Claude Code: per-folder, per-machine state
+.claude/
+
+# Claude-specifieke project-files: lokaal nuttig, niet voor publicatie
+CLAUDE.md
+WINDOWS_GUI_PROMPT.md
+
+# Build output (PlatformIO / Arduino IDE)
+.pio/
+build/
+
+# VS Code: commit alleen de draagbare config; negeer de machine-specifieke,
+# automatisch gegenereerde bestanden (absolute paden / IntelliSense-cache).
+# **/ -prefix zodat het ook werkt voor een .vscode/ in een submap.
+**/.vscode/*
+!**/.vscode/settings.json
+!**/.vscode/extensions.json
+!**/.vscode/arduino.json
+
+# VS Code "Local History" extensie (auto-save snapshots, bv. in Kicad/)
+.history/
+
+# OS-troep
+.DS_Store
+Thumbs.db
