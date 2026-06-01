@@ -1,7 +1,7 @@
 {
     "sketch": "iPieper_ino.ino",
     "board": "esp32:esp32:esp32",
-    "configuration": "JTAGAdapter=default,PSRAM=disabled,PartitionScheme=huge_app,CPUFreq=80,FlashMode=dio,FlashFreq=40,FlashSize=4M,UploadSpeed=921600,LoopCore=1,EventsCore=1,DebugLevel=none,EraseFlash=none",
+    "configuration": "JTAGAdapter=default,PSRAM=disabled,PartitionScheme=min_spiffs,CPUFreq=80,FlashMode=dio,FlashFreq=40,FlashSize=4M,UploadSpeed=921600,LoopCore=1,EventsCore=1,DebugLevel=none,EraseFlash=none",
     "port": "",
     "output": "build"
 }
